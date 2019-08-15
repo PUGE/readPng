@@ -12,7 +12,7 @@ c = len(lena[0])
 k = len(lena)
 
 dataList = np.zeros(c, np.float16)
-outputData = '['
+outputData = 'var data = ['
 
 print('图片宽度: ' + str(c) + 'px 图片高度: ' + str(k) + 'px')
 backImage = lena[0][0]
@@ -26,9 +26,9 @@ for key1 in range(0, c):
     if (value != backImage).all():
       # print(key1, value2 / k)
       # dataList[key1] = 1 - (value2 / k)
-      outputData += str(round(1 - (value2 / k), 4)) + ', '
+      outputData += str(value2) + ', '
       break
 outputData +=']'
-f = open('output.txt', 'w', encoding='utf-8')
+f = open('path.js', 'w', encoding='utf-8')
 f.write(outputData)
 f.close()
