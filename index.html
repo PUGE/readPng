@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <title>人民好新闻定评会投票</title>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="white" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="robots" content="all" />
+    <meta name="keywords" content="{TAG_59446_TAG}" />
+    <meta name="description" content="{TAG_59447_TAG}" />
+    <meta name="filetype" content="1" />
+    <meta name="publishedtype" content="1" />
+    <meta name="pagetype" content="2" />
+    <meta name="catalogs" content="w_0" />
+    <meta name="partner" content="">
+    <meta name="pageversion" content="3">
+    <meta name="applicable-device" content="mobile">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+    <meta name="full-screen" content="yes">
+    <meta name="x5-fullscreen" content="true">
+    <meta name="browsermode" content="application">
+    <meta name="x5-page-mode" content="app">
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .bg-image {
+        height: 100%;
+      }
+      .bg-image {
+        user-select: none;
+        pointer-events: none;
+      }
+      .touchbox {
+        height: 100%;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="touchbox">
+      <img class="bg-image" src="./test.png"/>
+      <div class="spot"></div>
+    </div>
+    
+    <script type="text/javascript" src="http://www.people.com.cn/img/MAIN/2019/02/119071/script/Scroller.js"></script>
+    <script type="text/javascript" src="http://www.people.com.cn/img/MAIN/2019/02/119071/script/Animate.js"></script>
+    <script>
+      setTimeout(() => {
+        // var scroller = new Scroller((left, top, zoom) => {
+        //   console.log(left, top)
+        //   // this.data.scrollNumber = isHorizontal ? top : left
+
+        //   // var X = parseInt(( this.data.scrollNumber + 40) / this.data.scaleX)
+        //   // // 使小人脚正好在线上
+        //   // // console.log(proportion)
+        //   // people.style.bottom = (pathPeople[X] - this.data.translateScale) * 100 * this.data.proportion + '%'
+        //   // // people.style.left = scrollNumber + 'px'
+        //   // content.style.transform = `translate3d(-${ this.data.scrollNumber}px, -${translateZ}px, 0)`
+        // }, {
+        //   zooming: false,
+        //   bouncing: false,
+        //   animating: true,
+        // })
+        scrollIt({
+          box: document.getElementsByClassName('touchbox')[0],
+          el: document.getElementsByClassName('bg-image')[0],
+          // 允许X轴拖动
+          x: true,
+          // 允许Y轴拖动
+          y: false,
+          moveing: function (change) {
+            console.log(change)
+          }
+        })
+        
+      }, 0)
+    </script>
+    <script>
+      function scrollIt (option, callBack) {
+        var Last = [0, 0]
+        var start = [0, 0]
+        var change = [0, 0]
+        option.box.ontouchstart = function (e) {
+          if (option.x) start[0] = e.touches[0].pageX
+          if (option.y) start[1] = e.touches[0].pageY
+        }
+        option.box.ontouchmove = function (e) {
+          if (option.x) change[0] = e.touches[0].pageX - start[0]
+          if (option.y) change[1] = e.touches[0].pageY - start[1]
+          option.el.style.transform = 'translate3d(' + String(Last[0] + change[0]) + 'px, ' + String(Last[1] + change[1]) + 'px, 0px)'
+          if (option.moveing) option.moveing(change)
+        }
+        option.box.ontouchend = function (e) {
+          Last[0] = Last[0] + change[0]
+          Last[1] = Last[1] + change[1]
+        }
+      }
+    </script>
+  </body>
+</html>
