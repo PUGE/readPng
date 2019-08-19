@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <title>人民好新闻定评会投票</title>
+    <title>readPNG</title>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
     <meta name="format-detection" content="telephone=no, email=no" />
@@ -57,7 +57,11 @@
         width: 40px;
         height: 40px;
         top: 10%;
-        /* border-radius: 20px; */
+        /* 在左面40像素位置 */
+        left: 40px;
+        border-radius: 20px;
+        /* 使小人站在线上 */
+        transform: translate(-50%, -100%);
       }
     </style>
   </head>
@@ -74,20 +78,36 @@
       function scrollIt (option, callBack) {
         var Last = [0, 0]
         var start = [0, 0]
-        var change = [0, 0]
+        var changeX = 0
+        var changeY = 0
         option.box.ontouchstart = function (e) {
           if (option.x) start[0] = e.touches[0].pageX
           if (option.y) start[1] = e.touches[0].pageY
         }
         option.box.ontouchmove = function (e) {
-          if (option.x) change[0] = e.touches[0].pageX - start[0]
-          if (option.y) change[1] = e.touches[0].pageY - start[1]
-          option.el.style.transform = 'translate3d(' + String(Last[0] + change[0]) + 'px, ' + String(Last[1] + change[1]) + 'px, 0px)'
-          if (option.moveing) option.moveing(Last[0] + change[0], Last[1] + change[1])
+          var tempChangeX = changeX
+          var tempChangeY = changeY
+          if (option.x) tempChangeX = e.touches[0].pageX - start[0]
+          if (option.y) tempChangeY = e.touches[0].pageY - start[1]
+          // 最新的X坐标
+          var nowX = Last[0] + tempChangeX
+          // 最新的Y坐标
+          var nowY = Last[1] + tempChangeY
+
+          // 默认情况下不能超出范围滑动
+          if (nowX >= 0) return
+
+          changeX = tempChangeX
+          changeY = tempChangeY
+          
+          option.el.style.transform = 'translate3d(' + String(nowX) + 'px, ' + String(nowY) + 'px, 0px)'
+          if (option.moveing) option.moveing(nowX, nowY)
         }
         option.box.ontouchend = function (e) {
-          Last[0] = Last[0] + change[0]
-          Last[1] = Last[1] + change[1]
+          Last[0] = Last[0] + changeX
+          Last[1] = Last[1] + changeY
+          // 默认情况下不能超出范围滑动
+          if (Last[0] < 0) return
         }
       }
     </script>
@@ -108,7 +128,7 @@
         moveing: function (x) {
           if (x > 0) return
           
-          spot.style.top = data[parseInt(-x *   scaleW)] / scaleH + 'px'
+          spot.style.top = data[parseInt((-x + 40) * scaleW)] / scaleH + 'px'
           // console.log(-x, scaleW)
         }
       })
